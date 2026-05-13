@@ -3,11 +3,13 @@ const authRoutes = require("./auth.routes");
 const productRoutes = require("./product.routes");
 const reviewRoutes = require("./review.routes");
 const wishlistRoutes = require("./wishlist.routes");
+const cartRoutes = require("./cart.routes");
 
 router.use("/auth", authRoutes);
 router.use("/products", productRoutes);
 // router.use("/products/:productId/reviews", reviewRoutes);
 router.use("/reviews", reviewRoutes);
 router.use("/wishlist", wishlistRoutes);
+router.use("/cart", cartRoutes);
 
 module.exports = router;

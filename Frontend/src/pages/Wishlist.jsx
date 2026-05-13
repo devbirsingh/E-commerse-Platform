@@ -1,53 +1,112 @@
-import React from 'react'
-import { FaHeart } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react';
+import { FaHeart, FaTrash } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { removeFromWishlist } from '../features/wishlist/wishlistThunk';
 
 const Wishlist = () => {
-  const items = useSelector(state => state.wishlist.items);
+  const items = useSelector((state) => state.wishlist.items);
   const dispatch = useDispatch();
 
   const handleWishlist = (id) => {
     try {
-      dispatch(removeFromWishlist(id))
+      dispatch(removeFromWishlist(id));
     } catch (error) {
-      
+      console.error(error);
     }
-  }
+  };
 
   return (
-    <div className='container mx-auto'>
-      <h2 className='p-3  text-2xl'>Favourites</h2>
-      <div className=' flex justify-center flex-wrap'>
-        {
-          items.map(product => (
-              <div class="w-full max-w-md bg-neutral-primary-soft p-3 border-default rounded-base shadow-2xl">
-                <div className='relative'>
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="container mx-auto px-4">
+        {/* Header Section */}
+        <div className="flex items-center justify-between mb-8 border-b pb-4">
+          <h2 className="text-3xl font-bold text-gray-800">My Favourites</h2>
+          <span className="text-gray-500 font-medium">{items.length} Items</span>
+        </div>
+
+        {items.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {items.map((product) => (
+              <div
+                key={product._id}
+                className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col"
+              >
+                {/* Image Container */}
+                <div className="relative overflow-hidden aspect-square">
                   <Link to={`/products/${product._id}`}>
-                      <img class="rounded-base mb-3" src={product.imageUrl} alt="product image" />
+                    <img
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      src={product.imageUrl}
+                      alt={product.name}
+                    />
                   </Link>
-                  <div className='absolute top-4 right-4 bg-white p-1 rounded-full'>
-                    <FaHeart className='text-red-600' onClick={() => handleWishlist(product._id)} size={30}/>
+                  {/* Remove Button - Floating */}
+                  <button
+                    onClick={() => handleWishlist(product._id)}
+                    className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm p-2.5 rounded-full shadow-md text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+                    title="Remove from wishlist"
+                  >
+                    <FaHeart size={20} />
+                  </button>
+                </div>
+
+                {/* Content */}
+                <div className="p-5 flex flex-col flex-grow">
+                  <div className="mb-4">
+                    <h5 className="text-lg font-bold text-gray-900 truncate uppercase tracking-tight">
+                      {product.name}
+                    </h5>
+                    <p className="text-2xl font-black text-indigo-600 mt-1">
+                      ${product.price}
+                    </p>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="mt-auto">
+                    <button
+                      type="button"
+                      className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-3 px-4 rounded-xl font-semibold hover:bg-indigo-600 transition-colors duration-200 active:scale-95"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                        />
+                      </svg>
+                      Add to Cart
+                    </button>
                   </div>
                 </div>
-                <div>
-                    <div class="flex items-center justify-between mt-3">
-                      <h5 class="text-xl text-heading font-semibold tracking-tight">{product.name}</h5>
-                      <span class="text-3xl font-extrabold text-heading">${product.price}</span>
-                    </div>
-
-                    <button type="button" class="inline-flex mt-3 text-white items-center bg-blue-600 hover:bg-brand-strong box-border border border-transparent focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-3 py-2 focus:outline-none">
-                        <svg class="w-4 h-4 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"/></svg>
-                        Add to cart
-                    </button>
-                </div>
-            </div> 
-          ))
-        }
+              </div>
+            ))}
+          </div>
+        ) : (
+          /* Empty State */
+          <div className="text-center py-20 bg-white rounded-3xl shadow-inner border-2 border-dashed border-gray-200">
+            <div className="text-gray-300 mb-4 flex justify-center">
+              <FaHeart size={80} />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900">Your wishlist is empty</h3>
+            <p className="text-gray-500 mt-2 mb-6">Looks like you haven't added any favorites yet.</p>
+            <Link
+              to="/products"
+              className="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Explore Products
+            </Link>
+          </div>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Wishlist
+export default Wishlist;

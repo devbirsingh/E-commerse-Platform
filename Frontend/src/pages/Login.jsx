@@ -40,7 +40,7 @@ const Login = () => {
             type="email" 
             name="email" 
             className="w-full p-2.5 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
-            placeholder="example@mail.com" 
+            placeholder="Enter your email" 
             required 
           />
         </div>
@@ -51,6 +51,7 @@ const Login = () => {
             onChange={changeHandler} 
             type="password" 
             name="password" 
+            placeholder="Enter your password"
             className="w-full p-2.5 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" 
             required 
           />
